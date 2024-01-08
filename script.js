@@ -1,12 +1,22 @@
 function searchBooks() {
-    // Get the scanned text from the textarea
     var scannedText = document.getElementById('scannedText').value;
+    var apiKey = 'AIzaSyBcPxDERe4D_nzJAstj0CVaemAXEqOA5PY';
+    
+    // Construct the API request URL
+    var apiUrl = 'https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(scannedText) + '&key=' + apiKey;
 
-    // Replace 'API_KEY_HERE' with your actual Google Books API key
-    var apiKey = 'API_KEY_HERE';
+    // Perform a fetch request to the Google Books API
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            // Extract book title from the API response
+            var bookTitle = data.items[0].volumeInfo.title;
 
-    // Perform a Google Books API search with the text
-
-    // Display the result on the webpage
-    document.getElementById('result').innerText = 'Book Title: ...'; // Add the actual title here
+            // Display the result on the webpage
+            document.getElementById('result').innerText = 'Book Title: ' + bookTitle;
+        })
+        .catch(error => {
+            console.error('Error fetching data from Google Books API:', error);
+            document.getElementById('result').innerText = 'Error finding book title. Please try again.';
+        });
 }
